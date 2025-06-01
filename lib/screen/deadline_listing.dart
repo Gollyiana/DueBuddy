@@ -9,8 +9,9 @@ class DeadlineListing extends StatelessWidget {
   Color _getDeadlineColor(String days) {
     int daysNum = int.tryParse(days.split(' ')[0]) ?? 0;
     if (daysNum <= 7) return const Color(0xFFD32F2F); // High urgency (Red)
-    if (daysNum <= 14)
+    if (daysNum <= 14) {
       return const Color(0xFFF57C00); // Medium urgency (Orange)
+    }
     return const Color(0xFF388E3C); // Low urgency (Green)
   }
 

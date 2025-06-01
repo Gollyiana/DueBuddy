@@ -1,3 +1,6 @@
+// ignore: file_names
+// ignore: file_names
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'app_drawer.dart';
 import 'deadline_listing.dart';
@@ -60,7 +63,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Expanded(
+            const Expanded(
               child: DeadlineListing(
                 deadlines: [
                   {'name': 'Math Homework', 'days': '7 days'},
