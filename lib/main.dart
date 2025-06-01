@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import 'a1-login.dart';
+
+void main() {
+  runApp(const DueBuddyApp());
+}
+
+final ThemeData dueBuddyTheme = ThemeData(
+  primaryColor: const Color(0xFF1E88E5),
+  colorScheme: ColorScheme.light(
+    primary: const Color(0xFF1E88E5),
+    secondary: const Color(0xFF1E88E5),
+    background: const Color(0xFFFAFAFA),
+    surface: Colors.white,
+    onPrimary: Colors.white,
+    onBackground: const Color(0xFF212121),
+    onSurface: const Color(0xFF212121),
+    error: const Color(0xFFD32F2F),
+  ),
+  scaffoldBackgroundColor: const Color(0xFFFAFAFA),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Color(0xFF1E88E5),
+    titleTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
+    iconTheme: IconThemeData(color: Colors.white),
+  ),
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(color: Color(0xFF212121)),
+    displayMedium: TextStyle(color: Color(0xFF212121)),
+    displaySmall: TextStyle(color: Color(0xFF212121)),
+    headlineMedium: TextStyle(color: Color(0xFF212121)),
+    headlineSmall: TextStyle(color: Color(0xFF212121)),
+    titleLarge: TextStyle(color: Color(0xFF212121)),
+    bodyLarge: TextStyle(color: Color(0xFF212121)),
+    bodyMedium: TextStyle(color: Color(0xFF212121)),
+    titleMedium: TextStyle(color: Color(0xFF757575)),
+    titleSmall: TextStyle(color: Color(0xFF757575)),
+    bodySmall: TextStyle(color: Color(0xFF757575)),
+    labelSmall: TextStyle(color: Color(0xFF757575)),
+  ),
+  cardTheme: CardTheme(
+    elevation: 1,
+    margin: const EdgeInsets.all(8),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+    color: Colors.white,
+  ),
+  buttonTheme: ButtonThemeData(
+    buttonColor: const Color(0xFF1E88E5),
+    textTheme: ButtonTextTheme.primary,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF1E88E5),
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    ),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: Colors.grey.shade300),
+    ),
+    filled: true,
+    fillColor: Colors.white,
+  ),
+);
+
+class DueBuddyApp extends StatelessWidget {
+  const DueBuddyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'DueBuddy',
+      theme: dueBuddyTheme,
+      home: const LoginPage(),
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/addNew': (context) => const AddNewPage(),
+        '/calendar': (context) => const CalendarPage(),
+        '/profile': (context) => const ProfilePage(),
+      },
+    );
+  }
+}
