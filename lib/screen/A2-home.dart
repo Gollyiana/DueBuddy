@@ -3,7 +3,9 @@ import 'app_drawer.dart';
 import 'deadline_listing.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final String username;
+
+  const HomePage({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +19,9 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Hello name,',
-              style: TextStyle(
+            Text(
+              'Hello $username,',
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF212121),

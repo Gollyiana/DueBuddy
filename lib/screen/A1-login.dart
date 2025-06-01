@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'a2-home.dart';
+import 'A2-home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -73,9 +73,10 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    Navigator.pushReplacement(
+                    Navigator.pushReplacementNamed(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      '/home',
+                      arguments: _usernameController.text, // Pass username here
                     );
                   }
                 },

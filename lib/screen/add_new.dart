@@ -54,7 +54,7 @@ class _AddNewPageState extends State<AddNewPage> {
       appBar: AppBar(
         title: const Text('New Due'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -146,7 +146,7 @@ class _AddNewPageState extends State<AddNewPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const Spacer(),
+              const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -163,7 +163,7 @@ class _AddNewPageState extends State<AddNewPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Save logic here
+                        // TODO: Save logic here
                         Navigator.pop(context);
                       }
                     },

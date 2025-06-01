@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
-import 'a1-login.dart';
+import 'screen/a1-login.dart';
+import 'screen/A2-home.dart';
+import 'screen/add_new.dart';
+import 'screen/app_drawer.dart';
+import 'screen/calendar.dart';
+import 'screen/deadline_details.dart';
+import 'screen/deadline_listing.dart';
+import 'screen/profile.dart';
 
 void main() {
   runApp(const DueBuddyApp());
@@ -7,15 +14,15 @@ void main() {
 
 final ThemeData dueBuddyTheme = ThemeData(
   primaryColor: const Color(0xFF1E88E5),
-  colorScheme: ColorScheme.light(
-    primary: const Color(0xFF1E88E5),
-    secondary: const Color(0xFF1E88E5),
-    background: const Color(0xFFFAFAFA),
+  colorScheme: const ColorScheme.light(
+    primary: Color(0xFF1E88E5),
+    secondary: Color(0xFF1E88E5),
+    background: Color(0xFFFAFAFA),
     surface: Colors.white,
     onPrimary: Colors.white,
-    onBackground: const Color(0xFF212121),
-    onSurface: const Color(0xFF212121),
-    error: const Color(0xFFD32F2F),
+    onBackground: Color(0xFF212121),
+    onSurface: Color(0xFF212121),
+    error: Color(0xFFD32F2F),
   ),
   scaffoldBackgroundColor: const Color(0xFFFAFAFA),
   appBarTheme: const AppBarTheme(
@@ -85,11 +92,17 @@ class DueBuddyApp extends StatelessWidget {
       theme: dueBuddyTheme,
       home: const LoginPage(),
       routes: {
-        '/home': (context) => const HomePage(),
+        '/home': (context) {
+          // Extract the username from route arguments
+          final username = ModalRoute.of(context)!.settings.arguments as String;
+          // Pass username to HomePage
+          return HomePage(username: username);
+        },
         '/addNew': (context) => const AddNewPage(),
         '/calendar': (context) => const CalendarPage(),
         '/profile': (context) => const ProfilePage(),
       },
+      debugShowCheckedModeBanner: false,
     );
   }
 }

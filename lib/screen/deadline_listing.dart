@@ -24,11 +24,11 @@ class DeadlineListing extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 8),
           child: ListTile(
             title: Text(
-              deadline['name']!,
+              deadline['name'] ?? '',
               style: const TextStyle(color: Color(0xFF212121)),
             ),
             subtitle: Text(
-              deadline['days']!,
+              deadline['days'] ?? '',
               style: const TextStyle(color: Color(0xFF757575)),
             ),
             trailing: const Icon(
@@ -40,7 +40,7 @@ class DeadlineListing extends StatelessWidget {
               width: 10,
               height: 40,
               decoration: BoxDecoration(
-                color: _getDeadlineColor(deadline['days']!),
+                color: _getDeadlineColor(deadline['days'] ?? '0 days'),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(4),
                   bottomLeft: Radius.circular(4),
@@ -52,8 +52,11 @@ class DeadlineListing extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => DeadlineDetails(
-                    name: deadline['name']!,
-                    days: deadline['days']!,
+                    name: deadline['name'] ?? '',
+                    type: deadline['type'] ?? 'Unknown',
+                    description:
+                        deadline['description'] ?? 'No description provided.',
+                    deadline: deadline['deadline'] ?? 'Unknown',
                   ),
                 ),
               );

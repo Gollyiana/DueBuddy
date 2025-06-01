@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 
 class DeadlineDetails extends StatelessWidget {
   final String name;
-  final String days;
+  final String type;
+  final String description;
+  final String deadline;
 
   const DeadlineDetails({
     super.key,
     required this.name,
-    required this.days,
+    required this.type,
+    required this.description,
+    required this.deadline,
   });
 
   @override
@@ -15,6 +19,7 @@ class DeadlineDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Deadline Details'),
+        backgroundColor: const Color(0xFF1E88E5),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -31,7 +36,7 @@ class DeadlineDetails extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Type of assignment: [Type]',
+              'Type of assignment: $type',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             const SizedBox(height: 20),
@@ -43,13 +48,13 @@ class DeadlineDetails extends StatelessWidget {
                 color: Color(0xFF212121),
               ),
             ),
-            const Text(
-              '[Detailed description of the assignment goes here]',
-              style: TextStyle(fontSize: 16, color: Color(0xFF757575)),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 16, color: Color(0xFF757575)),
             ),
             const SizedBox(height: 20),
             Text(
-              'Deadline: 12 May 2024, 12:00 AM',
+              'Deadline: $deadline',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             const Spacer(),
@@ -62,13 +67,17 @@ class DeadlineDetails extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF757575),
+                    minimumSize: const Size(150, 50),
                   ),
                   child: const Text('Back'),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Handle marking as completed
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF388E3C),
+                    minimumSize: const Size(150, 50),
                   ),
                   child: const Text('Mark as Completed'),
                 ),
