@@ -17,8 +17,10 @@ final ThemeData dueBuddyTheme = ThemeData(
   colorScheme: const ColorScheme.light(
     primary: Color(0xFF1E88E5),
     secondary: Color(0xFF1E88E5),
+    background: Color(0xFFFAFAFA),
     surface: Colors.white,
     onPrimary: Colors.white,
+    onBackground: Color(0xFF212121),
     onSurface: Color(0xFF212121),
     error: Color(0xFFD32F2F),
   ),

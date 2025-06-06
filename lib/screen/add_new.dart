@@ -163,8 +163,21 @@ class _AddNewPageState extends State<AddNewPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // TODO: Save logic here
-                        Navigator.pop(context);
+                        // Combine date and time into one DateTime
+                        final combinedDateTime = DateTime(
+                          _selectedDate.year,
+                          _selectedDate.month,
+                          _selectedDate.day,
+                          _selectedTime.hour,
+                          _selectedTime.minute,
+                        );
+
+                        Navigator.pop(context, {
+                          'title': _nameController.text,
+                          'type': _selectedType,
+                          'dueDate': combinedDateTime,
+                          'description': _descriptionController.text,
+                        });
                       }
                     },
                     style: ElevatedButton.styleFrom(
