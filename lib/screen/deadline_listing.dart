@@ -1,70 +1,104 @@
 import 'package:flutter/material.dart';
-import 'deadline_details.dart';
 
-class DeadlineListing extends StatelessWidget {
-  final List<Map<String, String>> deadlines;
+class DeadlineDetails extends StatelessWidget {
+  final String name;
+  final String type;
+  final String description;
+  final String deadline;
 
-  const DeadlineListing({super.key, required this.deadlines});
-
-  Color _getDeadlineColor(String days) {
-    int daysNum = int.tryParse(days.split(' ')[0]) ?? 0;
-    if (daysNum <= 7) return const Color(0xFFD32F2F); // High urgency (Red)
-    if (daysNum <= 14) {
-      return const Color(0xFFF57C00); // Medium urgency (Orange)
-    }
-    return const Color(0xFF388E3C); // Low urgency (Green)
-  }
+  const DeadlineDetails({
+    super.key,
+    required this.name,
+    required this.type,
+    required this.description,
+    required this.deadline,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: deadlines.length,
-      itemBuilder: (context, index) {
-        final deadline = deadlines[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          child: ListTile(
-            title: Text(
-              deadline['name'] ?? '',
-              style: const TextStyle(color: Color(0xFF212121)),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Deadline Details'),
+        backgroundColor: const Color(0xFF1E88E5),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              name,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF212121),
+              ),
             ),
-            subtitle: Text(
-              deadline['days'] ?? '',
-              style: const TextStyle(color: Color(0xFF757575)),
+            const SizedBox(height: 10),
+            Text(
+              'Type of assignment: $type',
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Color(0xFF757575),
+            const SizedBox(height: 20),
+            const Text(
+              'Description:',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF212121),
+              ),
             ),
-            leading: Container(
-              width: 10,
-              height: 40,
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: _getDeadlineColor(deadline['days'] ?? '0 days'),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  bottomLeft: Radius.circular(4),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                description,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFF757575),
                 ),
               ),
             ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DeadlineDetails(
-                    name: deadline['name'] ?? '',
-                    type: deadline['type'] ?? 'Unknown',
-                    description:
-                        deadline['description'] ?? 'No description provided.',
-                    deadline: deadline['deadline'] ?? 'Unknown',
+            const SizedBox(height: 20),
+            Text(
+              'Deadline: $deadline',
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF757575),
+                    minimumSize: const Size(150, 50),
                   ),
+                  child: const Text('Back'),
                 ),
-              );
-            },
-          ),
-        );
-      },
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF388E3C),
+                    minimumSize: const Size(150, 50),
+                  ),
+                  child: const Text('Mark as Completed'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

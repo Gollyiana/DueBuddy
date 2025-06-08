@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screen/a1-login.dart';
+import 'screen/A1-login.dart';
 import 'screen/A2-home.dart';
 import 'screen/add_new.dart';
 import 'screen/app_drawer.dart';
@@ -100,7 +100,10 @@ class DueBuddyApp extends StatelessWidget {
         },
         '/addNew': (context) => const AddNewPage(),
         '/calendar': (context) => const CalendarPage(),
-        '/profile': (context) => const ProfilePage(),
+        '/profile': (context) {
+          final username = ModalRoute.of(context)!.settings.arguments as String;
+          return ProfilePage(username: username);
+        },
       },
       debugShowCheckedModeBanner: false,
     );

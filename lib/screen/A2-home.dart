@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('DueBuddy'),
       ),
-      drawer: const AppDrawer(),
+      drawer: AppDrawer(username: widget.username),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
                           task['title'],
                           task['dueIn'],
                           task['category'],
+                          task['description'],
                         );
                       }).toList(),
                     ),
@@ -106,7 +107,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildDeadlineCard(String title, String dueIn, String category) {
+  Widget _buildDeadlineCard(String title, String dueIn, String category, String description) {
     Color cardColor;
     Icon cardIcon;
 
@@ -137,18 +138,25 @@ class _HomePageState extends State<HomePage> {
         title: Text(title),
         subtitle: Text('Due in $dueIn'),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => DeadlineDetails(
                 name: title,
                 type: category,
-                description: 'No description available',
+                description: description ?? 'No description available',
                 deadline: dueIn,
               ),
             ),
           );
+
+           // ✅ If task was marked as completed
+           if (result == true) {
+              setState(() {
+                allDeadlines.removeWhere((task) => task['title'] == title);
+              });
+            }
         },
       ),
     );
@@ -181,6 +189,7 @@ class _HomePageState extends State<HomePage> {
       'dueDate': dueDate,
       'dueIn': dueIn,
       'category': task['category'],
+      'description': task['description'] ?? '',
     };
   }).toList();
 }

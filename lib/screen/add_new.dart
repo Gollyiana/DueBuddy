@@ -137,15 +137,23 @@ class _AddNewPageState extends State<AddNewPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                controller: _descriptionController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  labelStyle: TextStyle(color: Color(0xFF757575)),
-                  border: OutlineInputBorder(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 5,
+                  decoration: const InputDecoration.collapsed(
+                    hintText: 'Enter description here',
+                  ),
+                  style: const TextStyle(fontSize: 16, color: Color(0xFF757575)),
                 ),
               ),
+
               const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,7 +184,8 @@ class _AddNewPageState extends State<AddNewPage> {
                           'title': _nameController.text,
                           'type': _selectedType,
                           'dueDate': combinedDateTime,
-                          'description': _descriptionController.text,
+                          'description': _descriptionController.text.trim(),
+
                         });
                       }
                     },

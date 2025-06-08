@@ -49,7 +49,9 @@ class DeadlineDetails extends StatelessWidget {
               ),
             ),
             Text(
-              description,
+              description.trim().isNotEmpty
+                  ? description
+                  : 'No description available',
               style: const TextStyle(fontSize: 16, color: Color(0xFF757575)),
             ),
             const SizedBox(height: 20),
@@ -73,13 +75,13 @@ class DeadlineDetails extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle marking as completed
+                    Navigator.pop(context, true);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF388E3C),
                     minimumSize: const Size(150, 50),
                   ),
-                  child: const Text('Mark as Completed'),
+                  child: const Text('Done'),
                 ),
               ],
             ),

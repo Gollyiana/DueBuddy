@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+   final String username;
+
+  const ProfilePage({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,8 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'User Name',
+                  Text(
+                    username,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

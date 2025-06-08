@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'profile.dart';
+import 'due.listing.page.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+    final String username;
+    const AppDrawer({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,12 @@ class AppDrawer extends StatelessWidget {
                 style: TextStyle(color: Color(0xFF212121))),
             onTap: () {
               Navigator.pop(context); // Placeholder
-              // Implement your actual Assignment navigation
+               Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DueListingPage(type: 'Assignment'),
+    ),
+  );// Implement your actual Assignment navigation
             },
           ),
 
@@ -40,7 +48,12 @@ class AppDrawer extends StatelessWidget {
                 const Text('Quiz', style: TextStyle(color: Color(0xFF212121))),
             onTap: () {
               Navigator.pop(context); // Placeholder
-              // Implement your actual Quiz navigation
+               Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DueListingPage(type: 'Quiz'),
+    ),
+  );// Implement your actual Quiz navigation
             },
           ),
 
@@ -51,7 +64,12 @@ class AppDrawer extends StatelessWidget {
                 const Text('Test', style: TextStyle(color: Color(0xFF212121))),
             onTap: () {
               Navigator.pop(context); // Placeholder
-              // Implement your actual Test navigation
+               Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DueListingPage(type: 'Test'),
+    ),
+  );// Implement your actual Test navigation
             },
           ),
 
@@ -62,7 +80,12 @@ class AppDrawer extends StatelessWidget {
                 const Text('Task', style: TextStyle(color: Color(0xFF212121))),
             onTap: () {
               Navigator.pop(context); // Placeholder
-              // Implement your actual Task navigation
+               Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => DueListingPage(type: 'Task'),
+    ),
+  );// Implement your actual Task navigation
             },
           ),
 
@@ -84,7 +107,12 @@ class AppDrawer extends StatelessWidget {
                 style: TextStyle(color: Color(0xFF212121))),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/profile');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(username: username),
+                ),
+              );
             },
           ),
 
