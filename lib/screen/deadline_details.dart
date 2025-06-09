@@ -48,11 +48,21 @@ class DeadlineDetails extends StatelessWidget {
                 color: Color(0xFF212121),
               ),
             ),
-            Text(
-              description.trim().isNotEmpty
-                  ? description
-                  : 'No description available',
-              style: const TextStyle(fontSize: 16, color: Color(0xFF757575)),
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFFBDBDBD)),
+                borderRadius: BorderRadius.circular(8.0),
+                color: Colors.grey[100],
+              ),
+              child: Text(
+                description.trim().isNotEmpty
+                    ? description
+                    : 'No description available',
+                style: const TextStyle(fontSize: 16, color: Color(0xFF757575)),
+              ),
             ),
             const SizedBox(height: 20),
             Text(

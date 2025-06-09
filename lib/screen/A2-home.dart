@@ -5,29 +5,71 @@ import 'deadline_details.dart';
 
 class HomePage extends StatefulWidget {
   final String username;
-  const HomePage({super.key, required this.username});
+
+  const HomePage({Key? key, required this.username}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<Map<String, dynamic>> _allDeadlines = [];
   String selectedCategory = 'All';
 
-  final List<Map<String, dynamic>> allDeadlines = [
-    {'title': 'Math Homework', 'dueDate': DateTime.now().add(Duration(days: 7)), 'category': 'Upcoming'},
-    {'title': 'Science Project', 'dueDate': DateTime.now().add(Duration(days: 14)), 'category': 'Upcoming'},
-    {'title': 'History Essay', 'dueDate': DateTime.now().subtract(Duration(days: 2)), 'category': 'Overdue'},
-    {'title': 'English Quiz', 'dueDate': null, 'category': 'Done'},
-  ];
+  void _addNewDue(Map<String, dynamic> newDue) {
+    setState(() {
+      _allDeadlines.add(newDue);
+    });
+  }
+
+  Future<void> _navigateToAddNew() async {
+    final result = await Navigator.pushNamed(context, '/addNew');
+    if (result != null && result is Map<String, dynamic>) {
+      _addNewDue({
+        'title': result['title'],
+        'type': result['type'],
+        'description': result['description'],
+        'dueDate': result['dueDate'],
+        'category': _getCategory(result['dueDate']),
+      });
+    }
+  }
+
+  String _getCategory(DateTime dueDate) {
+    final now = DateTime.now();
+    if (dueDate.isBefore(now)) {
+      return 'Overdue';
+    } else {
+      return 'Upcoming';
+    }
+  }
+
+  void _openDueListing(String type) {
+    // You may implement navigation to a listing page here
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('DueBuddy'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: DueSearchDelegate(_allDeadlines),
+              );
+            },
+          ),
+        ],
       ),
-      drawer: AppDrawer(username: widget.username),
+      drawer: AppDrawer(
+        username: widget.username,
+        allDeadlines: _allDeadlines,
+        onAddNew: _navigateToAddNew,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -71,14 +113,14 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 20),
             Expanded(
               child: _getFilteredDeadlines().isEmpty
-                  ? const Center(child: Text('No tasks here. 🎉'))
+                  ? const Center(child: Text('No due here. 🎉'))
                   : ListView(
                       children: _getFilteredDeadlines().map((task) {
                         return _buildDeadlineCard(
-                          task['title'],
-                          task['dueIn'],
-                          task['category'],
-                          task['description'],
+                          task['title'] as String,
+                          task['dueIn'] as String,
+                          task['category'] as String,
+                          task['description'] as String? ?? '',
                         );
                       }).toList(),
                     ),
@@ -87,20 +129,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-    final newTask = await Navigator.pushNamed(context, '/addNew');
-    if (newTask != null && newTask is Map<String, dynamic>) {
-      setState(() {
-        allDeadlines.add({
-          'title': newTask['title'],
-          'category': _getCategoryFromDate(newTask['dueDate']),
-          'dueDate': newTask['dueDate'],
-          'description': newTask['description'],
-        });
-         selectedCategory = 'All';
-      });
-    }
-  },
+        onPressed: _navigateToAddNew,
         backgroundColor: const Color(0xFF1E88E5),
         child: const Icon(Icons.add, color: Colors.white),
       ),
@@ -136,7 +165,7 @@ class _HomePageState extends State<HomePage> {
       child: ListTile(
         leading: cardIcon,
         title: Text(title),
-        subtitle: Text('Due in $dueIn'),
+        subtitle: Text('Due: $dueIn'),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () async {
           final result = await Navigator.push(
@@ -145,58 +174,162 @@ class _HomePageState extends State<HomePage> {
               builder: (context) => DeadlineDetails(
                 name: title,
                 type: category,
-                description: description ?? 'No description available',
+                description: description.isNotEmpty ? description : 'No description available',
                 deadline: dueIn,
               ),
             ),
           );
 
-           // ✅ If task was marked as completed
-           if (result == true) {
-              setState(() {
-                allDeadlines.removeWhere((task) => task['title'] == title);
-              });
-            }
+          if (result == true) {
+            setState(() {
+              _allDeadlines.removeWhere((task) => task['title'] == title);
+            });
+          }
         },
       ),
     );
   }
 
   List<Map<String, dynamic>> _getFilteredDeadlines() {
-  List<Map<String, dynamic>> filtered = selectedCategory == 'All'
-      ? allDeadlines
-      : allDeadlines.where((task) => task['category'] == selectedCategory).toList();
+    List<Map<String, dynamic>> filtered = selectedCategory == 'All'
+        ? _allDeadlines
+        : _allDeadlines.where((task) => task['category'] == selectedCategory).toList();
 
-  return filtered.map((task) {
-    final DateTime? dueDate = task['dueDate'];
-    String dueIn;
+    return filtered.map((task) {
+      final DateTime? dueDate = task['dueDate'] as DateTime?;
+      String dueIn;
 
-    if (dueDate == null) {
-      dueIn = 'No due date';
-    } else {
-      final difference = dueDate.difference(DateTime.now());
-      if (difference.isNegative) {
-        dueIn = '${-difference.inDays} day(s) ago';
-      } else if (difference.inDays == 0) {
-        dueIn = 'Today';
+      if (dueDate == null) {
+        dueIn = 'No due date';
       } else {
-        dueIn = 'in ${difference.inDays} day(s)';
+        final difference = dueDate.difference(DateTime.now());
+        if (difference.isNegative) {
+          dueIn = '${-difference.inDays} day(s) ago';
+        } else if (difference.inDays == 0) {
+          dueIn = 'Today';
+        } else {
+          dueIn = 'in ${difference.inDays} day(s)';
+        }
       }
-    }
 
       return {
-      'title': task['title'],
-      'dueDate': dueDate,
-      'dueIn': dueIn,
-      'category': task['category'],
-      'description': task['description'] ?? '',
-    };
-  }).toList();
+        'title': task['title'],
+        'dueDate': dueDate,
+        'dueIn': dueIn,
+        'category': task['category'],
+        'description': task['description'] ?? '',
+      };
+    }).toList();
+  }
 }
 
-      String _getCategoryFromDate(DateTime? dueDate) {
-    if (dueDate == null) return 'Done';
-    final now = DateTime.now();
-    return dueDate.isBefore(now) ? 'Overdue' : 'Upcoming';
+// 🔍 Custom Search Delegate
+class DueSearchDelegate extends SearchDelegate {
+  final List<Map<String, dynamic>> allDeadlines;
+
+  DueSearchDelegate(this.allDeadlines);
+
+  @override
+  String? get searchFieldLabel => 'Search tasks...';
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final results = allDeadlines.where((task) {
+      final title = task['title'].toString().toLowerCase();
+      final description = task['description'].toString().toLowerCase();
+      return title.contains(query.toLowerCase()) ||
+          description.contains(query.toLowerCase());
+    }).toList();
+
+    if (results.isEmpty) {
+      return const Center(child: Text('No matching tasks found.'));
+    }
+
+    return ListView.builder(
+      itemCount: results.length,
+      itemBuilder: (context, index) {
+        final task = results[index];
+        final dueDate = task['dueDate'] as DateTime?;
+        String dueIn;
+        if (dueDate == null) {
+          dueIn = 'No due date';
+        } else {
+          final difference = dueDate.difference(DateTime.now());
+          if (difference.isNegative) {
+            dueIn = '${-difference.inDays} day(s) ago';
+          } else if (difference.inDays == 0) {
+            dueIn = 'Today';
+          } else {
+            dueIn = 'in ${difference.inDays} day(s)';
+          }
+        }
+
+        return ListTile(
+          leading: const Icon(Icons.assignment),
+          title: Text(task['title']),
+          subtitle: Text('Due: $dueIn'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DeadlineDetails(
+                  name: task['title'],
+                  type: task['category'],
+                  description: task['description'] ?? 'No description available',
+                  deadline: dueIn,
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestions = allDeadlines.where((task) {
+      final title = task['title'].toString().toLowerCase();
+      final description = task['description'].toString().toLowerCase();
+      return title.contains(query.toLowerCase()) ||
+          description.contains(query.toLowerCase());
+    }).toList();
+
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final task = suggestions[index];
+        return ListTile(
+          leading: const Icon(Icons.assignment),
+          title: Text(task['title']),
+          onTap: () {
+            query = task['title'];
+            showResults(context);
+          },
+        );
+      },
+    );
   }
 }

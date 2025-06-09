@@ -2,90 +2,77 @@ import 'package:flutter/material.dart';
 import 'add_new.dart';
 import 'deadline_details.dart';
 
-class DueListingPage extends StatefulWidget {
+class DueListingPage extends StatelessWidget {
   final String type;
+  final List<Map<String, dynamic>> allDeadlines;
+  final Future<void> Function() onAddNew;
 
-  const DueListingPage({super.key, required this.type});
+  const DueListingPage({
+    Key? key,
+    required this.type,
+    required this.allDeadlines,
+    required this.onAddNew,
+  }) : super(key: key);
 
-  @override
-  State<DueListingPage> createState() => _DueListingPageState();
-}
-
-class _DueListingPageState extends State<DueListingPage> {
-  List<Map<String, dynamic>> dueItems = [];
-
-  @override
-  void initState() {
-    super.initState();
-    // Start with some sample data
-    dueItems = [
-      {
-        'name': '${widget.type} Homework 1',
-        'description': 'Complete chapter 1 exercises.',
-        'deadline': '2025-06-15',
-      },
-      {
-        'name': '${widget.type} Homework 2',
-        'description': 'Submit final draft of essay.',
-        'deadline': '2025-06-20',
-      },
-    ];
+  String _formatDueIn(DateTime? dueDate) {
+    if (dueDate == null) return 'No due date';
+    final difference = dueDate.difference(DateTime.now());
+    if (difference.isNegative) {
+      return '${-difference.inDays} day(s) ago';
+    } else if (difference.inDays == 0) {
+      return 'Today';
+    } else {
+      return 'in ${difference.inDays} day(s)';
+    }
   }
 
-  Future<void> _navigateToAddNew() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const AddNewPage(),
-      ),
-    );
-
-    if (result != null && result is Map<String, dynamic>) {
-      setState(() {
-        dueItems.add({
-          'name': result['title'],
-          'description': result['description'],
-          'deadline': '${result['dueDate'].day}/${result['dueDate'].month}/${result['dueDate'].year}',
-          'type': result['type'],
-        });
-      });
+  Widget _buildCategoryIcon(String? category) {
+    switch (category) {
+      case 'Upcoming':
+        return const Icon(Icons.schedule, color: Colors.orange);
+      case 'Overdue':
+        return const Icon(Icons.warning, color: Colors.red);
+      case 'Done':
+        return const Icon(Icons.check_circle, color: Colors.green);
+      default:
+        return const Icon(Icons.assignment, color: Colors.grey);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final filteredItems = allDeadlines
+        .where((item) => type == 'All' || item['type'] == type)
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.type} Due Listing'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _navigateToAddNew,
-          ),
-        ],
+        title: Text('$type Due Listing'),
+        // Removed the AppBar actions here
       ),
-      body: dueItems.isEmpty
+      body: filteredItems.isEmpty
           ? Center(
               child: Text(
-                'No ${widget.type} due items yet.',
+                'No $type yet. 🎉',
                 style: const TextStyle(fontSize: 16, color: Color(0xFF757575)),
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: dueItems.length,
+              padding: const EdgeInsets.all(16),
+              itemCount: filteredItems.length,
               itemBuilder: (context, index) {
-                final item = dueItems[index];
+                final item = filteredItems[index];
+                final dueIn = _formatDueIn(item['dueDate']);
                 return Card(
-                  elevation: 1,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
+                    leading: _buildCategoryIcon(item['category']),
                     title: Text(
-                      item['name']?.toString() ?? '',
+                      item['title'] ?? '',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -97,7 +84,7 @@ class _DueListingPageState extends State<DueListingPage> {
                       children: [
                         const SizedBox(height: 8),
                         Text(
-                          item['description']?.toString() ?? '',
+                          item['description'] ?? '',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Color(0xFF757575),
@@ -110,7 +97,7 @@ class _DueListingPageState extends State<DueListingPage> {
                                 size: 16, color: Color(0xFF757575)),
                             const SizedBox(width: 4),
                             Text(
-                              'Due: ${item['deadline']?.toString() ?? ''}',
+                              'Due: $dueIn',
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF757575),
@@ -125,10 +112,10 @@ class _DueListingPageState extends State<DueListingPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => DeadlineDetails(
-                            name: item['name'] ?? '',
-                            type: item['type'] ?? widget.type,
+                            name: item['title'] ?? '',
+                            type: item['category'] ?? type,
                             description: item['description'] ?? '',
-                            deadline: item['deadline'] ?? '',
+                            deadline: dueIn,
                           ),
                         ),
                       );
@@ -138,7 +125,7 @@ class _DueListingPageState extends State<DueListingPage> {
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navigateToAddNew,
+        onPressed: onAddNew,
         child: const Icon(Icons.add),
       ),
     );
