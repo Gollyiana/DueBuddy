@@ -71,27 +71,45 @@ class DeadlineDetails extends StatelessWidget {
             ),
             const Spacer(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
+                IconButton(
+                  icon: const Icon(Icons.delete,
+                      color: Color(0xFFD32F2F), size: 32),
+                  onPressed: () async {
+                    final confirm = await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Delete Deadline'),
+                        content: const Text(
+                            'Are you sure you want to delete this deadline?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (confirm == true) {
+                      Navigator.pop(context, 'delete');
+                    }
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF757575),
-                    minimumSize: const Size(150, 50),
-                  ),
-                  child: const Text('Back'),
                 ),
-                ElevatedButton(
+                IconButton(
+                  icon: const Icon(Icons.check_circle,
+                      color: Color(0xFF388E3C), size: 32),
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    Navigator.pop(context, 'done');
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF388E3C),
-                    minimumSize: const Size(150, 50),
-                  ),
-                  child: const Text('Done'),
                 ),
               ],
             ),

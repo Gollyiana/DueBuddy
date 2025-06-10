@@ -6,12 +6,16 @@ class AppDrawer extends StatelessWidget {
   final String username;
   final List<Map<String, dynamic>> allDeadlines;
   final Future<void> Function() onAddNew;
+  final void Function(Map<String, dynamic>) onDelete;
+  final void Function(Map<String, dynamic>) onDone;
 
   const AppDrawer({
     super.key,
     required this.username,
     required this.allDeadlines,
     required this.onAddNew,
+    required this.onDelete,
+    required this.onDone,
   });
 
   @override
@@ -47,6 +51,8 @@ class AppDrawer extends StatelessWidget {
                     type: 'Assignment',
                     allDeadlines: allDeadlines,
                     onAddNew: onAddNew,
+                    onDelete: onDelete,
+                    onDone: onDone,
                   ),
                 ),
               );
@@ -66,6 +72,8 @@ class AppDrawer extends StatelessWidget {
                     type: 'Quiz',
                     allDeadlines: allDeadlines,
                     onAddNew: onAddNew,
+                    onDelete: onDelete,
+                    onDone: onDone,
                   ),
                 ),
               );
@@ -85,6 +93,8 @@ class AppDrawer extends StatelessWidget {
                     type: 'Test',
                     allDeadlines: allDeadlines,
                     onAddNew: onAddNew,
+                    onDelete: onDelete,
+                    onDone: onDone,
                   ),
                 ),
               );
@@ -104,6 +114,8 @@ class AppDrawer extends StatelessWidget {
                     type: 'Task',
                     allDeadlines: allDeadlines,
                     onAddNew: onAddNew,
+                    onDelete: onDelete,
+                    onDone: onDone,
                   ),
                 ),
               );

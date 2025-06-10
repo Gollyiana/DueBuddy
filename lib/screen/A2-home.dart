@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'app_drawer.dart';
 import 'deadline_details.dart';
+import 'add_new.dart';
+import 'due.listing.page.dart'; // Import the DueListingPage
 
 class HomePage extends StatefulWidget {
   final String username;
@@ -44,8 +46,27 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _openDueListing(String type) {
-    // You may implement navigation to a listing page here
+  void _openDueListing(String type) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DueListingPage(
+          type: type,
+          allDeadlines: _allDeadlines,
+          onAddNew: _navigateToAddNew,
+          onDelete: (item) {
+            setState(() {
+              _allDeadlines.remove(item);
+            });
+          },
+          onDone: (item) {
+            setState(() {
+              item['category'] = 'Done';
+            });
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -53,23 +74,24 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('DueBuddy'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: DueSearchDelegate(_allDeadlines),
-              );
-            },
-          ),
-        ],
       ),
+      
       drawer: AppDrawer(
         username: widget.username,
         allDeadlines: _allDeadlines,
         onAddNew: _navigateToAddNew,
+        onDelete: (item) {
+          setState(() {
+            _allDeadlines.remove(item);
+          });
+        },
+        onDone: (item) {
+          setState(() {
+            item['category'] = 'Done';
+          });
+        },
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -121,6 +143,7 @@ class _HomePageState extends State<HomePage> {
                           task['dueIn'] as String,
                           task['category'] as String,
                           task['description'] as String? ?? '',
+                          task['type'] as String? ?? '', // Pass the type
                         );
                       }).toList(),
                     ),
@@ -136,7 +159,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildDeadlineCard(String title, String dueIn, String category, String description) {
+  Widget _buildDeadlineCard(String title, String dueIn, String category, String description, String type) {
     Color cardColor;
     Icon cardIcon;
 
@@ -173,14 +196,21 @@ class _HomePageState extends State<HomePage> {
             MaterialPageRoute(
               builder: (context) => DeadlineDetails(
                 name: title,
-                type: category,
+                type: type, // Pass the correct assignment type
                 description: description.isNotEmpty ? description : 'No description available',
                 deadline: dueIn,
               ),
             ),
           );
 
-          if (result == true) {
+          if (result == 'done') {
+            setState(() {
+              final index = _allDeadlines.indexWhere((task) => task['title'] == title);
+              if (index != -1) {
+                _allDeadlines[index]['category'] = 'Done';
+              }
+            });
+          } else if (result == 'delete') {
             setState(() {
               _allDeadlines.removeWhere((task) => task['title'] == title);
             });
@@ -218,118 +248,8 @@ class _HomePageState extends State<HomePage> {
         'dueIn': dueIn,
         'category': task['category'],
         'description': task['description'] ?? '',
+        'type': task['type'] ?? '', 
       };
     }).toList();
-  }
-}
-
-// 🔍 Custom Search Delegate
-class DueSearchDelegate extends SearchDelegate {
-  final List<Map<String, dynamic>> allDeadlines;
-
-  DueSearchDelegate(this.allDeadlines);
-
-  @override
-  String? get searchFieldLabel => 'Search tasks...';
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    final results = allDeadlines.where((task) {
-      final title = task['title'].toString().toLowerCase();
-      final description = task['description'].toString().toLowerCase();
-      return title.contains(query.toLowerCase()) ||
-          description.contains(query.toLowerCase());
-    }).toList();
-
-    if (results.isEmpty) {
-      return const Center(child: Text('No matching tasks found.'));
-    }
-
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final task = results[index];
-        final dueDate = task['dueDate'] as DateTime?;
-        String dueIn;
-        if (dueDate == null) {
-          dueIn = 'No due date';
-        } else {
-          final difference = dueDate.difference(DateTime.now());
-          if (difference.isNegative) {
-            dueIn = '${-difference.inDays} day(s) ago';
-          } else if (difference.inDays == 0) {
-            dueIn = 'Today';
-          } else {
-            dueIn = 'in ${difference.inDays} day(s)';
-          }
-        }
-
-        return ListTile(
-          leading: const Icon(Icons.assignment),
-          title: Text(task['title']),
-          subtitle: Text('Due: $dueIn'),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DeadlineDetails(
-                  name: task['title'],
-                  type: task['category'],
-                  description: task['description'] ?? 'No description available',
-                  deadline: dueIn,
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final suggestions = allDeadlines.where((task) {
-      final title = task['title'].toString().toLowerCase();
-      final description = task['description'].toString().toLowerCase();
-      return title.contains(query.toLowerCase()) ||
-          description.contains(query.toLowerCase());
-    }).toList();
-
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final task = suggestions[index];
-        return ListTile(
-          leading: const Icon(Icons.assignment),
-          title: Text(task['title']),
-          onTap: () {
-            query = task['title'];
-            showResults(context);
-          },
-        );
-      },
-    );
   }
 }

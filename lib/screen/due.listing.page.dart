@@ -6,12 +6,16 @@ class DueListingPage extends StatelessWidget {
   final String type;
   final List<Map<String, dynamic>> allDeadlines;
   final Future<void> Function() onAddNew;
+  final void Function(Map<String, dynamic>) onDelete;
+  final void Function(Map<String, dynamic>) onDone;
 
   const DueListingPage({
     Key? key,
     required this.type,
     required this.allDeadlines,
     required this.onAddNew,
+    required this.onDelete,
+    required this.onDone,
   }) : super(key: key);
 
   String _formatDueIn(DateTime? dueDate) {
@@ -48,8 +52,8 @@ class DueListingPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('$type Due Listing'),
-        // Removed the AppBar actions here
       ),
+      
       body: filteredItems.isEmpty
           ? Center(
               child: Text(
@@ -107,25 +111,32 @@ class DueListingPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DeadlineDetails(
                             name: item['title'] ?? '',
-                            type: item['category'] ?? type,
+                            type: item['type'] ?? type, // Use the correct assignment type
                             description: item['description'] ?? '',
                             deadline: dueIn,
                           ),
                         ),
                       );
+                      if (result == 'delete') {
+                        onDelete(item);
+                      } else if (result == 'done') {
+                        onDone(item);
+                      }
                     },
                   ),
                 );
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: onAddNew,
+        onPressed: () async {
+          await onAddNew();
+        },
         child: const Icon(Icons.add),
       ),
     );
