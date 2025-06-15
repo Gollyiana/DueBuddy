@@ -2,8 +2,7 @@
 import 'package:flutter/material.dart';
 import 'app_drawer.dart';
 import 'deadline_details.dart';
-import 'add_new.dart';
-import 'due.listing.page.dart'; // Import the DueListingPage
+import 'due.listing.page.dart';
 
 class HomePage extends StatefulWidget {
   final String username;
@@ -17,6 +16,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<Map<String, dynamic>> _allDeadlines = [];
   String selectedCategory = 'All';
+  String _searchQuery = '';
+  bool _isSearching = false;
 
   void _addNewDue(Map<String, dynamic> newDue) {
     setState(() {
@@ -75,7 +76,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('DueBuddy'),
       ),
-      
       drawer: AppDrawer(
         username: widget.username,
         allDeadlines: _allDeadlines,
@@ -91,7 +91,6 @@ class _HomePageState extends State<HomePage> {
           });
         },
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -137,15 +136,21 @@ class _HomePageState extends State<HomePage> {
               child: _getFilteredDeadlines().isEmpty
                   ? const Center(child: Text('No due here. 🎉'))
                   : ListView(
-                      children: _getFilteredDeadlines().map((task) {
-                        return _buildDeadlineCard(
-                          task['title'] as String,
-                          task['dueIn'] as String,
-                          task['category'] as String,
-                          task['description'] as String? ?? '',
-                          task['type'] as String? ?? '', // Pass the type
-                        );
-                      }).toList(),
+                      children: _getFilteredDeadlines()
+                        .where((task) {
+                          final query = _searchQuery.toLowerCase();
+                          return task['title'].toString().toLowerCase().contains(query) ||
+                                 task['description'].toString().toLowerCase().contains(query);
+                        })
+                        .map((task) {
+                          return _buildDeadlineCard(
+                            task['title'] as String,
+                            task['dueIn'] as String,
+                            task['category'] as String,
+                            task['description'] as String? ?? '',
+                            task['type'] as String? ?? '',
+                          );
+                        }).toList(),
                     ),
             ),
           ],

@@ -1,6 +1,9 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 
+// Store users as username: {email, password}
+final Map<String, Map<String, String>> registeredUsers = {};
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -12,6 +15,16 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  // Helper to check if user is registered
+  bool _isRegistered(String username, String password) {
+    return registeredUsers[username]?['password'] == password;
+  }
+
+  // Called from sign up page
+  static void registerUser(String username, String password) {
+    registeredUsers[username] = {'password': password};
+  }
 
   @override
   void dispose() {
@@ -75,11 +88,19 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        '/home',
-                        arguments: _usernameController.text,
-                      );
+                      final username = _usernameController.text;
+                      final password = _passwordController.text;
+                      if (_isRegistered(username, password)) {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/home',
+                          arguments: username,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please register an account first or double-check your username and password.')),
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -87,6 +108,75 @@ class _LoginPageState extends State<LoginPage> {
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: const Text('Log in'),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () async {
+                      final usernameController = TextEditingController();
+                      final passwordController = TextEditingController();
+                      await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Reset Password'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller: usernameController,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Username',
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                TextField(
+                                  controller: passwordController,
+                                  obscureText: true,
+                                  decoration: const InputDecoration(
+                                    labelText: 'New Password',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Cancel'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  final uname = usernameController.text.trim();
+                                  final newPass = passwordController.text.trim();
+                                  if (registeredUsers.containsKey(uname)) {
+                                    registeredUsers[uname]!['password'] = newPass;
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Password reset successful! Please log in.')),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Username not found.')),
+                                    );
+                                  }
+                                },
+                                child: const Text('Reset'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: const Text('Forgot Password?'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/signup');
+                  },
+                  child: const Text('Don\'t have an account? Sign Up'),
                 ),
               ],
             ),

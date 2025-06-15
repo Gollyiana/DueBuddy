@@ -2,16 +2,9 @@ import 'package:flutter/material.dart';
 import 'screen/A1-login.dart';
 import 'screen/A2-home.dart';
 import 'screen/add_new.dart';
-import 'screen/app_drawer.dart';
 import 'screen/calendar.dart';
-import 'screen/deadline_details.dart';
-import 'screen/deadline_listing.dart';
-import 'screen/due.listing.page.dart';
 import 'screen/profile.dart';
-
-void main() {
-  runApp(const DueBuddyApp());
-}
+import 'screen/signup.dart';
 
 final ThemeData dueBuddyTheme = ThemeData(
   primaryColor: const Color(0xFF1E88E5),
@@ -83,6 +76,10 @@ final ThemeData dueBuddyTheme = ThemeData(
   ),
 );
 
+void main() {
+  runApp(const DueBuddyApp());
+}
+
 class DueBuddyApp extends StatelessWidget {
   const DueBuddyApp({super.key});
 
@@ -94,9 +91,7 @@ class DueBuddyApp extends StatelessWidget {
       home: const LoginPage(),
       routes: {
         '/home': (context) {
-          // Extract the username from route arguments
           final username = ModalRoute.of(context)!.settings.arguments as String;
-          // Pass username to HomePage
           return HomePage(username: username);
         },
         '/addNew': (context) => const AddNewPage(),
@@ -105,6 +100,7 @@ class DueBuddyApp extends StatelessWidget {
           final username = ModalRoute.of(context)!.settings.arguments as String;
           return ProfilePage(username: username);
         },
+        '/signup': (context) => const SignUpPage(),
       },
       debugShowCheckedModeBanner: false,
     );
