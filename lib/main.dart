@@ -13,7 +13,7 @@ final ThemeData dueBuddyTheme = ThemeData(
     primary: Color(0xFF1E88E5),
     secondary: Color(0xFF1E88E5),
     background: Color(0xFFFAFAFA),
-    surface: Colors.white,
+    surface: Colors.white,pu
     onPrimary: Colors.white,
     onBackground: Color(0xFF212121),
     onSurface: Color(0xFF212121),
