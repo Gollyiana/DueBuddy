@@ -32,11 +32,22 @@ final ThemeData dueBuddyTheme = ThemeData(
     displayLarge: TextStyle(color: Color(0xFF212121)),
     displayMedium: TextStyle(color: Color(0xFF212121)),
     displaySmall: TextStyle(color: Color(0xFF212121)),
+    headlineMedium: TextStyle(color: Color(0xFF212121)),
+    headlineSmall: TextStyle(color: Color(0xFF212121)),
+    titleLarge: TextStyle(color: Color(0xFF212121)),
+    bodyLarge: TextStyle(color: Color(0xFF212121)),
+    bodyMedium: TextStyle(color: Color(0xFF212121)),
+    titleMedium: TextStyle(color: Color(0xFF757575)),
+    titleSmall: TextStyle(color: Color(0xFF757575)),
+    bodySmall: TextStyle(color: Color(0xFF757575)),
+    labelSmall: TextStyle(color: Color(0xFF757575)),
+  ),
   cardTheme: CardTheme(
     elevation: 1,
     margin: const EdgeInsets.all(8),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8),
+    ),
     color: Colors.white,
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
@@ -45,6 +56,7 @@ final ThemeData dueBuddyTheme = ThemeData(
       foregroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
+      ),
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(
