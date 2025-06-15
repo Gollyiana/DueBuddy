@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'screen/A1-login.dart';
 import 'screen/A2-home.dart';
 import 'screen/add_new.dart';
@@ -15,7 +14,7 @@ final ThemeData dueBuddyTheme = ThemeData(
     background: Color(0xFFFAFAFA),
     surface: Colors.white,pu
     onPrimary: Colors.white,
-    onBackground: Color(0xFF212121),
+    onBackground: Color(0xFF212121),   
     onSurface: Color(0xFF212121),
     error: Color(0xFFD32F2F),
   ),
@@ -97,7 +96,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
       title: 'DueBuddy',
       theme: dueBuddyTheme,
       home: const LoginPage(),
