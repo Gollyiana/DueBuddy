@@ -1,6 +1,5 @@
-// ignore: file_names
-import 'package:flutter/material.dart';
 
+<<<<<<< HEAD
 // Store users as username: {email, password}
 final Map<String, Map<String, String>> registeredUsers = {};
 
@@ -186,3 +185,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+=======
+>>>>>>> 6f5773bbecacb9b8d1869a2abc577183dc4228e1

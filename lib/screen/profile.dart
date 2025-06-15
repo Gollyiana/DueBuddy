@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import 'A1-login.dart';
 
@@ -95,3 +96,5 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
+=======
+>>>>>>> 6f5773bbecacb9b8d1869a2abc577183dc4228e1
