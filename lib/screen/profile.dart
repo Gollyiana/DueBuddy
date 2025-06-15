@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 import 'package:flutter/material.dart';
-import 'A1-login.dart';
+import 'a1-login.dart';
 
 class ProfilePage extends StatelessWidget {
   final String username;
@@ -26,49 +25,59 @@ class ProfilePage extends StatelessWidget {
                 radius: 48,
                 backgroundColor:
                     Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                child: Icon(Icons.person,
-                    size: 60, color: Theme.of(context).colorScheme.primary),
+                child: Icon(
+                  Icons.person,
+                  size: 60,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
               const SizedBox(height: 20),
               Text(
                 username,
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               if (email.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Text(
                   email,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary),
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                 ),
               ],
               const SizedBox(height: 32),
               Card(
                 elevation: 2,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16)),
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Column(
                   children: [
                     ListTile(
-                      leading: Icon(Icons.settings,
-                          color: Theme.of(context).iconTheme.color),
+                      leading: Icon(
+                        Icons.settings,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
                       title: const Text('Settings'),
                       onTap: () {},
                     ),
                     const Divider(height: 1),
                     ListTile(
-                      leading: Icon(Icons.notifications,
-                          color: Theme.of(context).iconTheme.color),
+                      leading: Icon(
+                        Icons.notifications,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
                       title: const Text('Notifications'),
                       onTap: () {},
                     ),
                     const Divider(height: 1),
                     ListTile(
-                      leading: Icon(Icons.help,
-                          color: Theme.of(context).iconTheme.color),
+                      leading: Icon(
+                        Icons.help,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
                       title: const Text('Help & Support'),
                       onTap: () {},
                     ),
@@ -84,7 +93,8 @@ class ProfilePage extends StatelessWidget {
                   backgroundColor: const Color(0xFFD32F2F),
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 icon: const Icon(Icons.logout),
                 label: const Text('Log Out'),
@@ -96,5 +106,3 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
-=======
->>>>>>> 6f5773bbecacb9b8d1869a2abc577183dc4228e1

@@ -1,6 +1,5 @@
+import 'package:flutter/material.dart';
 
-<<<<<<< HEAD
-// Store users as username: {email, password}
 final Map<String, Map<String, String>> registeredUsers = {};
 
 class LoginPage extends StatefulWidget {
@@ -15,12 +14,10 @@ class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // Helper to check if user is registered
   bool _isRegistered(String username, String password) {
     return registeredUsers[username]?['password'] == password;
   }
 
-  // Called from sign up page
   static void registerUser(String username, String password) {
     registeredUsers[username] = {'password': password};
   }
@@ -97,7 +94,10 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please register an account first or double-check your username and password.')),
+                          const SnackBar(
+                            content: Text(
+                                'Please register an account first or double-check your credentials'),
+                          ),
                         );
                       }
                     }
@@ -115,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () async {
                       final usernameController = TextEditingController();
                       final passwordController = TextEditingController();
+
                       await showDialog(
                         context: context,
                         builder: (context) {
@@ -127,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                                   controller: usernameController,
                                   decoration: const InputDecoration(
                                     labelText: 'Username',
+                                    border: OutlineInputBorder(),
                                   ),
                                 ),
                                 const SizedBox(height: 12),
@@ -135,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                                   obscureText: true,
                                   decoration: const InputDecoration(
                                     labelText: 'New Password',
+                                    border: OutlineInputBorder(),
                                   ),
                                 ),
                               ],
@@ -147,16 +150,21 @@ class _LoginPageState extends State<LoginPage> {
                               ElevatedButton(
                                 onPressed: () {
                                   final uname = usernameController.text.trim();
-                                  final newPass = passwordController.text.trim();
+                                  final newPass =
+                                      passwordController.text.trim();
                                   if (registeredUsers.containsKey(uname)) {
-                                    registeredUsers[uname]!['password'] = newPass;
+                                    registeredUsers[uname]!['password'] =
+                                        newPass;
                                     Navigator.pop(context);
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Password reset successful! Please log in.')),
+                                      const SnackBar(
+                                          content: Text(
+                                              'Password reset successful!')),
                                     );
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Username not found.')),
+                                      const SnackBar(
+                                          content: Text('Username not found')),
                                     );
                                   }
                                 },
@@ -185,5 +193,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-=======
->>>>>>> 6f5773bbecacb9b8d1869a2abc577183dc4228e1
