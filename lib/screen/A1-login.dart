@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                                'Please register an account first or double-check your credentials'),
+                                'Please register an account first or double-check your username and password.'),
                           ),
                         );
                       }
